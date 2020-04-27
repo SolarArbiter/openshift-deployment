@@ -1,6 +1,6 @@
 namespace: production
 image_tag: stable
-network: noaa surfrad
-schedule: '30 1 * * *'
+network: doe arm
+schedule: '15 2 * * *'
 base_url: https://api.solarforecastarbiter.org
 end: '$today 2'
