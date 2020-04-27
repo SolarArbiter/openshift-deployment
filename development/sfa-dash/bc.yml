@@ -13,7 +13,16 @@ spec:
     to:
       kind: ImageStreamTag
       name: sfa-dash:latest
-  postCommit: {}
+  postCommit:
+    command:
+      - sh
+      - -c
+      - |
+       pip install -r  https://raw.githubusercontent.com/SolarArbiter/solarforecastarbiter-core/master/requirements-test.txt
+       pytest --pyargs solarforecastarbiter
+       pip install -r https://raw.githubusercontent.com/SolarArbiter/solarforecastarbiter_dashboard/master/requirements-test.txt
+       pip install pytest-custom_exit_code
+       pytest --pyargs sfa_dash --suppress-no-test-exit-code
   resources: {}
   runPolicy: Serial
   source:
@@ -25,17 +34,12 @@ spec:
     sourceStrategy:
       from:
         kind: ImageStreamTag
-        name: python-extra:latest
+        name: sfa-core:latest
     type: Source
   successfulBuildsHistoryLimit: 3
   triggers:
   - imageChange: {}
     type: ImageChange
-  - type: ImageChange
-    imageChange:
-      from:
-        kind: ImageStreamTag
-        name: sfa-core:latest
   - type: ConfigChange
   - type: GitHub
     github:

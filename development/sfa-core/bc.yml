@@ -13,7 +13,13 @@ spec:
     to:
       kind: ImageStreamTag
       name: sfa-core:latest
-  postCommit: {}
+  postCommit:
+    command:
+      - sh
+      - -c
+      - |
+       pip install -r  https://raw.githubusercontent.com/SolarArbiter/solarforecastarbiter-core/master/requirements-test.txt
+       pytest --pyargs solarforecastarbiter 
   resources: {}
   runPolicy: Serial
   source:
@@ -23,7 +29,8 @@ spec:
           shopt -s dotglob &&\
           cd /tmp/src && \
           pip install -r requirements.txt && \
-          pip install ".[all]"
+          pip install ".[all]" && \
+          rm -r /tmp/src
   strategy:
     dockerStrategy:
       noCache: true
