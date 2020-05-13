@@ -29,7 +29,7 @@ spec:
         - name: APP_SCRIPT
           value: /opt/app-root/bin/sfa-api
         - name: APP_ARGS
-          value: scheduled-worker /conf/job-config.py
+          value: scheduled-worker --job-monitoring-interval 300 /conf/job-config.py
         image: sfa-api:{{ sfa_api_image_tag | default('latest') }}
         imagePullPolicy: Always
         name: jobworker
