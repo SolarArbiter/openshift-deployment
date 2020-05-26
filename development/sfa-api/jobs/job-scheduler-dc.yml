@@ -23,13 +23,13 @@ spec:
         deploymentconfig: job-scheduler
     spec:
       containers:
-      - env:
+      - command:
+          - /opt/app-root/bin/sfa-api
+          - scheduler
+          - /conf/job-config.py
+        env:
         - name: SENTRY_DSN
           value: {{ sentry_dsn }}
-        - name: APP_SCRIPT
-          value: /opt/app-root/bin/sfa-api
-        - name: APP_ARGS
-          value: scheduler /conf/job-config.py
         image: sfa-api:{{ sfa_api_image_tag | default('latest') }}
         imagePullPolicy: Always
         name: jobscheduler

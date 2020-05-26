@@ -23,13 +23,16 @@ spec:
         deploymentconfig: api-worker
     spec:
       containers:
-      - env:
+      - command:
+          - /opt/app-root/bin/sfa-api
+          - worker
+          - /redis/redis-config.py
+        env:
         - name: SENTRY_DSN
           value: {{ sentry_dsn }}
-        - name: APP_SCRIPT
-          value: /opt/app-root/bin/sfa-api
-        - name: APP_ARGS
-          value: worker /redis/redis-config.py
+        # important for orca config
+        - name: HOME
+          value: /opt/app-root/
         image: sfa-api:{{ sfa_api_image_tag | default('latest') }}
         imagePullPolicy: Always
         name: rqworker
@@ -42,7 +45,7 @@ spec:
         volumeMounts:
         - mountPath: /redis
           name: redis-config
-        - mountPath: /opt/app-root/src/.plotly
+        - mountPath: /opt/app-root/.plotly
           name: orca-config
       dnsPolicy: ClusterFirst
       restartPolicy: Always

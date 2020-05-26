@@ -35,13 +35,17 @@ spec:
         - mountPath: /gpghome
           name: gpghome
       containers:
-      - env:
+      - command:
+          - sh
+          - -c
+          - gunicorn "$APP_MODULE" --bind=0.0.0.0:8080 --access-logfile=- --config "$APP_CONFIG"
+        env:
         - name: prometheus_multiproc_dir
           value: /metrics
         - name: APP_MODULE
           value: {{ dashboard_app }}
         - name: APP_CONFIG
-          value: ./gunicorn_config.py
+          value: /opt/app-root/src/gunicorn_config.py
         - name: SENTRY_DSN
           value: {{ sentry_dsn }}
         - name: GNUPGHOME
@@ -83,8 +87,9 @@ spec:
         - containerPort: 8081
           protocol: TCP
         resources: {}
-        livenessProbe:
-          tcpSocket:
+        readinessProbe:
+          httpGet:
+            scheme: HTTPS
             port: 8080
           initialDelaySeconds: 1
           timeoutSeconds: 5

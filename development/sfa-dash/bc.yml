@@ -13,25 +13,18 @@ spec:
     to:
       kind: ImageStreamTag
       name: sfa-dash:latest
-  postCommit:
-    command:
-      - sh
-      - -c
-      - |
-       pip install -r  https://raw.githubusercontent.com/SolarArbiter/solarforecastarbiter-core/master/requirements-test.txt
-       pytest --pyargs solarforecastarbiter
-       pip install -r https://raw.githubusercontent.com/SolarArbiter/solarforecastarbiter_dashboard/master/requirements-test.txt
-       pip install pytest-custom_exit_code
-       pytest --pyargs sfa_dash --suppress-no-test-exit-code
   resources: {}
   runPolicy: Serial
   source:
-    git:
-      ref: master
-      uri: https://github.com/SolarArbiter/solarforecastarbiter_dashboard.git
-    type: Git
+    dockerfile: |
+      FROM quay.io/solararbiter/solarforecastarbiter-core:latest
+      RUN git clone https://github.com/solararbiter/solarforecastarbiter-dashboard /opt/app-root/src && \
+          cd /opt/app-root/src && \
+          pip install -r requirements.txt && \
+          pip install .
   strategy:
-    sourceStrategy:
+    dockerStrategy:
+      noCache: true
       from:
         kind: ImageStreamTag
         name: sfa-core:latest

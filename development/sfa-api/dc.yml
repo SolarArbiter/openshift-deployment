@@ -29,7 +29,11 @@ spec:
         deploymentconfig: sfa-api
     spec:
       containers:
-      - env:
+      - command:
+          - sh
+          - -c
+          - gunicorn "$APP_MODULE" --bind=0.0.0.0:8080 --access-logfile=- --config "$APP_CONFIG"
+        env:
         - name: REDOC_VERSION
           value: {{ redoc_version | default('next') }}
         - name: prometheus_multiproc_dir
@@ -37,7 +41,7 @@ spec:
         - name: APP_MODULE
           value: sfa_api:app_with_metrics
         - name: APP_CONFIG
-          value: ./gunicorn_config.py
+          value: /opt/app-root/src/gunicorn_config.py
         - name: AUTH0_CLIENT_ID
           valueFrom:
             secretKeyRef:
@@ -84,16 +88,14 @@ spec:
         - containerPort: 8080
           protocol: TCP
         resources: {}
-        livenessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 1
-          timeoutSeconds: 5
         readinessProbe:
-          tcpSocket:
+          httpGet:
+            scheme: HTTPS
+            path: /
             port: 8080
           initialDelaySeconds: 5
           timeoutSeconds: 5
+          periodSeconds: 15
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
