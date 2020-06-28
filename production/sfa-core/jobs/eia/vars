@@ -1,0 +1,6 @@
+namespace: production
+image_tag: stable
+network: eia
+schedule: '30 2 * * *'
+base_url: https://api.solarforecastarbiter.org
+end: '$today 3'

@@ -43,6 +43,13 @@ spec:
                       key: arm-api-user
                       name: reference-data
                 {% endif %}
+                {% if network == 'eia' %}
+                - name: EIA_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      key: eia-api-key
+                      name: reference-data
+                {% endif %}
                 - name: SFA_API_USER
                   valueFrom:
                     secretKeyRef:
