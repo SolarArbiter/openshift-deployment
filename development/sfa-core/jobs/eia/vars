@@ -1,0 +1,6 @@
+namespace: development
+image_tag: latest
+network: eia
+schedule: '30 2 * * *'
+base_url: https://dev-api.solarforecastarbiter.org
+end: '$today 3'
