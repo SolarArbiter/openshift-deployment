@@ -33,8 +33,12 @@ spec:
         command:
           - sh
           - -c
-          - gunicorn "$APP_MODULE" --bind=0.0.0.0:8080 --access-logfile=- --config "$APP_CONFIG"
+          - gunicorn "$APP_MODULE" --bind=0.0.0.0:8080 --access-logfile=- --config "$APP_CONFIG" --max-requests $MAX_REQUESTS --max-requests-jitter $MAX_REQUESTS_JITTER
         env:
+        - name: MAX_REQUESTS
+          value: "30"
+        - name: MAX_REQUESTS_JITTER
+          value: "10"
         - name: REDOC_VERSION
           value: {{ redoc_version | default('next') }}
         - name: prometheus_multiproc_dir
