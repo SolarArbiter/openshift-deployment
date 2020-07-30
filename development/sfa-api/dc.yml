@@ -70,6 +70,11 @@ spec:
           periodSeconds: 15
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
+        resources:
+          requests:
+            memory: 1Gi
+          limits:
+            memory: 2Gi
         volumeMounts:
         - mountPath: /certs
           name: cert-secret
